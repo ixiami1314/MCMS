@@ -18,6 +18,12 @@
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <log4j.version>2.19.0</log4j.version>
+
+        <!-- ====================================== -->
+        <!-- 配置远程docker服务地址，镜像打包名称前缀     -->
+        <!-- ====================================== -->
+        <remote.docker.prefix>pmy</remote.docker.prefix>
+        <remote.docker.ip>localhost</remote.docker.ip>
     </properties>
     <repositories>
         <repository>
@@ -201,6 +207,27 @@
                      </configuration>
                  </execution>
              </executions>
+         </plugin>
+
+         <!--docker镜像build插件-->
+         <plugin>
+             <groupId>com.spotify</groupId>
+             <artifactId>docker-maven-plugin</artifactId>
+             <version>1.2.0</version>
+             <configuration>
+                 <dockerHost>http://${remote.docker.ip}:2375</dockerHost>
+                 <!-- 注意imageName一定要是符合正则[a-z0-9-_.]的，否则构建不会成功 -->
+                 <imageName>${remote.docker.prefix}/${project.artifactId}</imageName>
+                 <dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
+                 <rm>true</rm>
+                 <resources>
+                     <resource>
+                         <targetPath>/</targetPath>
+                         <directory>${project.build.directory}</directory>
+                         <include>${project.build.finalName}.jar</include>
+                     </resource>
+                 </resources>
+             </configuration>
          </plugin>
 
 
