@@ -25,9 +25,11 @@ package net.mingsoft.cms.util;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.PageUtil;
+import com.alibaba.fastjson.JSONObject;
 import freemarker.core.ParseException;
 import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.TemplateNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import net.mingsoft.base.constant.Const;
 import net.mingsoft.basic.util.BasicUtil;
 import net.mingsoft.basic.util.SpringUtil;
@@ -54,6 +56,7 @@ import java.util.Map;
 /**
  * 文章解析工具类
  */
+@Slf4j
 public class CmsParserUtil {
 
 
@@ -101,6 +104,12 @@ public class CmsParserUtil {
      */
     public static void generateList(CategoryEntity column, int articleIdTotal, String htmlDir)
             throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException {
+
+        log.debug("生成静态列表页参数：");
+        log.debug("  - column: {}", JSONObject.toJSONString(column));
+        log.debug("  - articleIdTotal: {}", articleIdTotal);
+        log.debug("  - htmlDir: {}", htmlDir);
+
         try {
             // 文章的栏目模型编号
             PageBean page = new PageBean();
@@ -192,7 +201,6 @@ public class CmsParserUtil {
      * @throws TemplateNotFoundException
      */
     public static void generateBasic(List<CategoryBean> articleIdList, String htmlDir) {
-
         Map<String, Object> parserParams = new HashMap<String, Object>();
         parserParams.put(ParserUtil.IS_DO, false);
         if (BasicUtil.getWebsiteApp() != null) {

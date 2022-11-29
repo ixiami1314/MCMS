@@ -26,6 +26,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.spring.stat.BeanTypeAutoProxyCreator;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import net.mingsoft.basic.filter.XSSEscapeFilter;
 import net.mingsoft.basic.interceptor.ActionInterceptor;
 import net.mingsoft.mdiy.biz.IConfigBiz;
@@ -57,6 +58,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
+@Slf4j
 public class WebConfig implements WebMvcConfigurer {
 
     @Resource
@@ -99,6 +101,7 @@ public class WebConfig implements WebMvcConfigurer {
         String uploadFolderPath = MSProperties.upload.path;
         String template = MSProperties.upload.template;
         String htmlDir = MSProperties.diy.htmlDir;
+
         // 上传路径映射 这里的映射不能使用File.separator Windows会存在映射问题
         registry.addResourceHandler(uploadMapping).addResourceLocations("/" + uploadFolderPath + "/", "file:" + uploadFolderPath + "/");
         registry.addResourceHandler("/" + template + "/**").addResourceLocations("/" + template + "/", "file:" + template + "/");
@@ -107,6 +110,13 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/app/**").addResourceLocations("/app/", "file:app/", "classpath:/app/");
         registry.addResourceHandler("/static/**").addResourceLocations("/static/", "file:static/", "classpath:/static/", "classpath:/META-INF/resources/");
         registry.addResourceHandler("/api/**").addResourceLocations("/api/", "file:api/", "classpath:/api/");
+
+        log.info("------------------------------------");
+        log.info("- {} <> {}", uploadMapping, "/" + uploadFolderPath + "/");
+        log.info("- {} <> {}", uploadMapping, "file:" + uploadFolderPath + "/");
+        log.info("- {} <> {}", "/" + template + "/**", "/" + template + "/", "file:" + template + "/");
+        log.info("- {} <> {}", "/"+htmlDir+"/**", "/"+htmlDir+"/", "file:"+htmlDir+"/");
+        log.info("------------------------------------");
         if (new File(uploadFolderPath).isAbsolute()) {
             //如果指定了绝对路径，上传的文件都映射到uploadMapping下
             registry.addResourceHandler(uploadMapping).addResourceLocations("file:" + uploadFolderPath + "/"

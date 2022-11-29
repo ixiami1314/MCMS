@@ -23,7 +23,7 @@
         <!-- 配置远程docker服务地址，镜像打包名称前缀     -->
         <!-- ====================================== -->
         <remote.docker.prefix>pmy</remote.docker.prefix>
-        <remote.docker.ip>localhost</remote.docker.ip>
+        <remote.docker.ip>192.168.200.131</remote.docker.ip>
     </properties>
     <repositories>
         <repository>
@@ -120,6 +120,10 @@
             <artifactId>log4j-api</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -133,10 +137,10 @@
                 <excludes>
                     <!-- 可以避免将静态资源打入jar包中，方便生产实时修改静态资源文件-->
                     <!-- 打包生产建议并手动将static、html、upload、template复制到生产 -->
-                    <!--<exclude>static/</exclude>
+                    <exclude>static/</exclude>
                     <exclude>html/</exclude>
                     <exclude>upload/</exclude>
-                    <exclude>template/</exclude>-->
+                    <exclude>template/</exclude>
 
                     <!-- 如果生产需要实时修改WEB-INF/下的页面可，启用这行并手动将项目中的WEB-INF目录复制到运行环境 -->
                     <!--<exclude>WEB-INF/</exclude>-->
@@ -225,6 +229,10 @@
                          <targetPath>/</targetPath>
                          <directory>${project.build.directory}</directory>
                          <include>${project.build.finalName}.jar</include>
+                     </resource>
+                     <resource>
+                         <targetPath>/webapp</targetPath>
+                         <directory>src/main/webapp</directory>
                      </resource>
                  </resources>
              </configuration>
