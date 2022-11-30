@@ -23,7 +23,10 @@
 package net.mingsoft.cms.aop;
 
 import cn.hutool.core.io.FileUtil;
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import net.mingsoft.basic.aop.BaseAop;
+import net.mingsoft.basic.filter.XssHttpServletRequestWrapper;
 import net.mingsoft.basic.util.BasicUtil;
 import net.mingsoft.cms.biz.ICategoryBiz;
 import net.mingsoft.cms.biz.IContentBiz;
@@ -56,6 +59,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Aspect
+@Slf4j
 public class ContentAop extends BaseAop {
 
 
@@ -89,6 +93,7 @@ public class ContentAop extends BaseAop {
 
 //        获取方法参数
         ContentEntity content = getType(pjp, ContentEntity.class);
+        log.debug("- 获取方法上的参数 {}", JSONObject.toJSONString(content));
 //        如果id为空则直接发行
         if (content.getId() == null) {
             return pjp.proceed();
